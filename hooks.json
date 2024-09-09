@@ -1,0 +1,65 @@
+[
+  {
+    "id": "redeploy-webhook",
+    "execute-command": "../joticketsaler.fallforrising.com/deploy.sh",
+    "command-working-directory": "../joticketsaler.fallforrising.com",
+    "pass-arguments-to-command": [
+      {
+        "source": "payload",
+        "name": "repository.name"
+      }
+    ],
+    "trigger-rule": {
+      "and": [
+        {
+          "match":
+          {
+            "type": "payload-hash-sha1",
+            "secret": "test",
+            "parameter":
+            {
+              "source": "header",
+              "name": "X-Hub-Signature"
+            }
+          }
+        },
+        {
+          "match":
+          {
+            "type": "value",
+            "value": "master",
+            "parameter":
+            {
+              "source": "payload",
+              "name": "workflow_run.head_branch"
+            }
+          }
+        },
+        {
+          "match":
+          {
+            "type": "value",
+            "value": "completed",
+            "parameter":
+            {
+              "source": "payload",
+              "name": "action"
+            }
+          }
+        },
+        {
+          "match":
+          {
+            "type": "value",
+            "value": "success",
+            "parameter":
+            {
+              "source": "payload",
+              "name": "workflow_run.conclusion"
+            }
+          }
+        }
+      ]
+    }
+  }
+]
